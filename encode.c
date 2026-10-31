@@ -115,6 +115,11 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
                 return e_failure;   
             }
         }
+        else
+        {
+            printf(RED "ERROR: Destination image extension is missing. Expected .bmp\n" RESET);
+            return e_failure;
+        }
     }
     else
     {

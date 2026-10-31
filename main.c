@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) // .aout -e <source_file> <secret_data_file> <o
 
         if(valid_CLA == e_success)
         {
-            printf(GREEN "Files are all set!\t ENCODING STARTED\n" RESET);
+            printf(GREEN "Files are all set!\nENCODING STARTED...........\n" RESET);
         }
         else
         {
