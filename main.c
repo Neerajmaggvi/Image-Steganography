@@ -20,10 +20,28 @@ OperationType check_operation_type(char *symbol)
 {
     //step 1 -> check symbol is -e or not
         // yes -> return e_encode
+    char *check_encode = strstr(symbol, "-e");
+
+    if(check_encode != NULL)
+    {
+        if(strcmp(check_encode, "-e") == 0)
+        {
+            return e_encode;
+        }
+    }
     
     // step 2 -> check symbol is -d or not
         // yes -> return e_decode
+    char *check_decode = strstr(symbol, "-d");
 
-    // return e_unsupported
+    if(check_decode != NULL)
+    {
+        if(strcmp(check_decode, "-d") == 0)
+        {
+            return e_decode;
+        }
+    }
+
+    return e_unsupported;
 
 }

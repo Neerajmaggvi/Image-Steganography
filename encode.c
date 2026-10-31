@@ -2,6 +2,7 @@
 #include "encode.h"
 #include "types.h"
 #include "common.h"
+#include "color.h"
 
 /* Function Definitions */
 
@@ -49,20 +50,79 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
     // step 1 -> check argv[2] is having .bmp or not
         //yes -> store the file name into encInfo -> src_image_fname = argv[2]
         //no - > return e_failure
+    char *check_bmp = strstr(argv[2], ".bmp");
+
+    if(check_bmp != NULL)
+    {
+        if(strcmp(check_bmp, ".bmp") == 0)
+        {
+            encInfo -> src_image_fname = argv[2];
+        }
+        else
+        {
+            printf(RED "ERROR: Please enter proper extension for the source file!(.bmp)\n" RESET);
+            return e_failure;
+        }
+    }
+    else
+    {
+        printf(RED "ERROR: File extension not present!(.bmp)\n" RESET);
+        return e_failure;
+    }
 
     // step 2 -> check argv[3] is having extn there or not 
         // yes - > store the file name into encInfo -> secret_fname = argv[3]
         // no -> return e_failure
-    
+    char *check_extn = strstr(argv[3], ".txt");
+
+    if(check_extn != NULL)
+    {
+        if(strcmp(check_extn, ".txt") == 0)
+        {
+            encInfo -> secret_fname = argv[3];
+        }
+        else
+        {
+            printf(RED "ERROR: Please enter proper extension for the source file!(.txt)\n" RESET);
+            return e_failure;
+        }
+    }
+    else
+    {
+        printf(RED "ERROR: File extension not present!(.txt)\n" RESET);
+        return e_failure;
+    }
+
     // step 3 -> check argv[4] is NULL or not
         //yes -> check argv[4] is having .bmp or not
                 //yes -> store the file name into encInfo -> stego_image_fname = argv[4]
                 //no - > return e_failure
         
         //no -> store default name the encInfo -> stego_image_fname = "stego.bmp"
+    if(argv[4] != NULL)
+    {
+        char *check_dst_extn = strstr(argv[4], ".bmp");
 
-    // return e_success;
+        if(check_dst_extn != NULL)
+        {
+            if(strcmp(check_dst_extn, ".bmp") == 0)
+            {
+                encInfo -> stego_image_fname = argv[4];
+            }
+            else
+            {
+                printf(RED "ERROR: Please enter proper extension for the destination file!(.bmp)\n" RESET);
+                return e_failure;   
+            }
+        }
+    }
+    else
+    {
+        printf(BLUE "Default name added\n" RESET);
+        encInfo -> stego_image_fname = "stego.bmp";
+    }
 
+    return e_success;
 
 }
 
