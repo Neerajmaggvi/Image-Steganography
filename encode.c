@@ -60,13 +60,13 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
         }
         else
         {
-            printf(RED "ERROR: Please enter proper extension for the source file!(.bmp)\n" RESET);
+            printf(RED "ERROR: Invalid source image extension. Expected .bmp\n" RESET);
             return e_failure;
         }
     }
     else
     {
-        printf(RED "ERROR: File extension not present!(.bmp)\n" RESET);
+        printf(RED "ERROR: Source image extension is missing. Expected .bmp\n" RESET);
         return e_failure;
     }
 
@@ -83,13 +83,13 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
         }
         else
         {
-            printf(RED "ERROR: Please enter proper extension for the source file!(.txt)\n" RESET);
+            printf(RED "ERROR: Invalid secret file extension. Expected .txt\n" RESET);
             return e_failure;
         }
     }
     else
     {
-        printf(RED "ERROR: File extension not present!(.txt)\n" RESET);
+        printf(RED "ERROR: Secret file extension is missing. Expected .txt\n" RESET);
         return e_failure;
     }
 
@@ -111,7 +111,7 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
             }
             else
             {
-                printf(RED "ERROR: Please enter proper extension for the destination file!(.bmp)\n" RESET);
+                printf(RED "ERROR: Destination image extension is missing. Expected .bmp\n" RESET);
                 return e_failure;   
             }
         }

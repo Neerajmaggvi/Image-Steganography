@@ -9,12 +9,12 @@ int main(int argc, char *argv[]) // .aout -e <source_file> <secret_data_file> <o
 {
     //step 1 -> check check_operation_type(argv[1]) is returning e_encode or not
         // yes -> EncodeInfo encInfo;
-    int information = check_operation_type(argv[1]);
+    OperationType information = check_operation_type(argv[1]);
     if(information == e_encode)
     {
         EncodeInfo encInfo;
 
-        int valid_CLA = read_and_encode_args(argv, &encInfo);
+        Status valid_CLA = read_and_validate_encode_args(argv, &encInfo);
 
         if(valid_CLA == e_success)
         {
