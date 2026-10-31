@@ -48,8 +48,6 @@ uint get_file_size(FILE *fptr)
 Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
 {
     // step 1 -> check argv[2] is having .bmp or not
-        //yes -> store the file name into encInfo -> src_image_fname = argv[2]
-        //no - > return e_failure
     char *check_bmp = strstr(argv[2], ".bmp");
 
     if(check_bmp != NULL)
@@ -71,8 +69,6 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
     }
 
     // step 2 -> check argv[3] is having extn there or not 
-        // yes - > store the file name into encInfo -> secret_fname = argv[3]
-        // no -> return e_failure
     char *check_extn = strstr(argv[3], ".txt");
 
     if(check_extn != NULL)
@@ -93,12 +89,7 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
         return e_failure;
     }
 
-    // step 3 -> check argv[4] is NULL or not
-        //yes -> check argv[4] is having .bmp or not
-                //yes -> store the file name into encInfo -> stego_image_fname = argv[4]
-                //no - > return e_failure
-        
-        //no -> store default name the encInfo -> stego_image_fname = "stego.bmp"
+    // step 3 -> check argv[4] is given is the CLA or default name has to be given.
     if(argv[4] != NULL)
     {
         char *check_dst_extn = strstr(argv[4], ".bmp");
@@ -127,6 +118,7 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
         encInfo -> stego_image_fname = "stego.bmp";
     }
 
+    // After all the validation with no errors.
     return e_success;
 
 }
