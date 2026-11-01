@@ -368,8 +368,6 @@ Status do_encoding(EncodeInfo *encInfo)
 
 
     //step 3 -> call copy_bmp_header(encInfo -> fptr_src_image, encInfo -> fptr_stego_image)is returning e_success or not
-            //no -> print error return e_failure
-            //yes -> print success and goto next step
     printf("\n[3] COPY HEADER CHECK\n");
 
     Status for_checking_header_copy = copy_bmp_header(encInfo -> fptr_src_image, encInfo -> fptr_stego_image);
