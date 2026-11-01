@@ -33,7 +33,17 @@ uint get_image_size_for_bmp(FILE *fptr_image)
 uint get_file_size(FILE *fptr)
 {
     // Find the size of secret file data
+
+    // fseek is used to treverse the file pointer to the end. 
+    fseek(fptr, 0, SEEK_END);
+
+    // ftell is used to return the number of bytes till the file pointer current position.
+    long secret_file_size = ftell(fptr);
+
+    rewind(fptr); // Get the file pointer back
+
     // return secret file size
+    return secret_file_size;
 
 }
 
@@ -164,20 +174,43 @@ Status open_files(EncodeInfo *encInfo)
 
 Status check_capacity(EncodeInfo *encInfo)
 {
-    // Magic                 = 2 × 8 = 16
-    // Extension size        = 4 × 8 = 32
-    // Extension             = 4 × 8 = 32
-    // Secret size           = 4 × 8 = 32
-    // Secret data           = 9 × 8 = 72
+    // Magic string     = 2 × 8 = 16 bits
+    // Stores the predefined identifier (#*) to identify encoded data.
 
-    //step 1 -> encInfo -> image_capacity = call get_image_size_for_bmp(encoInfo -> fptr_src_image)
+    // Extension size   = 4 × 8 = 32 bits
+    // Stores the length of the secret file extension (.txt).
+    // Example: 4 characters.
 
-    //step 2 -> encInfo -> size_secret_file = call get_file_size(encInfo -> fptr_secret)
+    // Extension        = 4 × 8 = 32 bits
+    // Stores the actual secret file extension (.txt).
 
-    //step 3 -> check encInfo -> image_capacity > 16 + 32 + (strlen(encInfo -> extn_secret_file) * 8) + 32 + (encInfo -> size_secret_file * 8)
-                //t -> return e_success;
-                //f -> return e_failure
-   
+    // Secret size      = 4 × 8 = 32 bits (We have to store 9 that is a integer that's why we write 4 x 8. Int needs 4 bytes as storage.)
+    // Stores the total size of the secret file contents in bytes.
+    // Example: 9 bytes for "HELLO1234".
+
+    // Secret data      = 9 × 8 = 72 bits
+    // Stores the actual contents of the secret file.
+    // Example: "HELLO1234".
+
+    // Find the capacity of the source file 
+    encInfo -> image_capacity = get_image_size_for_bmp(encInfo -> fptr_src_image);
+
+    // Find the size of the secret data that has to encode into source file
+    encInfo -> size_secret_file = get_file_size(encInfo -> fptr_secret);
+
+
+    // Checking if the image capacity is greater that required bits to encode.
+    int required_bits = 16 + 32 + (strlen(encInfo->extn_secret_file) * 8) + 32 + (encInfo->size_secret_file * 8);
+    
+    if(encInfo -> image_capacity >= required_bits)
+    {
+        return e_success;
+    }
+    else
+    {
+        return e_failure;
+    }
+    
 }
 
 Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
@@ -294,22 +327,35 @@ Status encode_size_to_lsb(int size, char *imageBuffer)
 Status do_encoding(EncodeInfo *encInfo)
 {
     //step 1 -> check open_files(encInfo) is returning e_success or not
-            //no -> print error return e_failure
-            //yes -> print success and goto next step
-    Status for_open_file = open_files(&encInfo);
+    Status for_open_file = open_files(encInfo);
 
+    printf("\tFILE STATUS\t");
     if(for_open_file == e_failure)
     {
-        fprintf(stderr, RED "FILE OPEN FAILURED\n" RESET);
+        fprintf(stderr, RED "FILE OPEN FAILED\n" RESET);
+        return e_failure;
     }
     else
     {
-        printf(GREEN "FILE OPEN SUCCESSFULL!\n" RESET);
+        printf(GREEN "FILES OPENED SUCCESSFULLY!\n" RESET);
     }
 
     //step 2 -> check check_capacity(encInfo) is returning e_success or not
-            //no -> print error return e_failure
-            //yes -> print success and goto next step
+    printf("\t FILE CAPACITY STATUS\t");
+
+    Status for_checking_capacity = check_capacity(encInfo);
+
+    if(for_checking_capacity == e_failure)
+    {
+        fprintf(stderr, RED "ERROR: INSUFFICIENT IMAGE CAPACITY TO ENCODE THE SECRET FILE.\n" RESET);
+        return e_failure;
+    }
+    else
+    {
+        printf(GREEN "INFO: IMAGE HAS SUFFICIENT CAPACITY TO ENCODE THE SECRET FILE.\n" RESET);
+        return e_success;
+    }
+
 
     //step 3 -> call copy_bmp_header(encInfo -> fptr_src_image, encInfo -> fptr_stego_image)is returning e_success or not
             //no -> print error return e_failure
