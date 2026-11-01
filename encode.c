@@ -252,13 +252,20 @@ Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
         }
 
         //step 2 -> call encode_byte_to_lsb(magic_string[i], buffer)
-        encode_byte_to_lsb(magic_string[i], buffer);
+        Status check_encoding = encode_byte_to_lsb(magic_string[i], buffer);
 
-        //step 3 -> write the buffer into dest file
-        if(fwrite(buffer, sizeof(char), 8, encInfo -> fptr_stego_image) != 8)
-        {
+       if(check_encoding == e_success)
+       {
+            //step 3 -> write the buffer into dest file
+            if(fwrite(buffer, sizeof(char), 8, encInfo -> fptr_stego_image) != 8)
+            {
+                return e_failure;
+            }
+       }
+       else
+       {
             return e_failure;
-        }
+       }
     }
 
     return e_success;
@@ -332,18 +339,8 @@ Status copy_remaining_img_data(FILE *fptr_src, FILE *fptr_dest)
     return e_failure;
 }
 
-Status encode_byte_to_lsb(char data, char *image_buffer)
+Status encode_byte_to_lsb(unsigned char data, char *image_buffer)
 {
-    // Repeat for 8 bits
-
-    // Extract LSB from data
-
-    // Clear LSB of image byte
-
-    // Put data bit into image LSB
-
-    // Shift data right
-
     int j = 0;
 
     for(int i = 7; i >= 0; i--)
@@ -355,6 +352,7 @@ Status encode_byte_to_lsb(char data, char *image_buffer)
         j++;
     }
 
+    return e_success;
 }
 
 Status encode_size_to_lsb(int size, char *imageBuffer)
@@ -413,13 +411,22 @@ Status do_encoding(EncodeInfo *encInfo)
         printf(GREEN "    STATUS: HEADER COPIED SUCCESSFULLY.\n" RESET);  
     }
 
-
-
-
-
-
-
     //step 4 -> call encode_magic_string(MAGIC_STRING, encInfo)
+    printf("\n[4] MAGIC STRING ENCODING\n");
+
+    Status check_magic_str_encoding = encode_magic_string(MAGIC_STRING, encInfo);
+
+    if(check_magic_str_encoding == e_failure)
+    {
+        fprintf(stderr, RED "    ERROR: MAGIC STRING ENCODING FAILED.\n" RESET);
+        return e_failure;
+    }
+
+    printf(GREEN "    STATUS: MAGIC STRING ENCODED SUCCESSFULLY.\n" RESET);
+
+
+
+    
 
     //step 5 -> call encode_secret_file_extn_size(strlen(encInfo -> extn_secret_file), encInfo)
 
