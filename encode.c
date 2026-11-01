@@ -136,7 +136,7 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
 Status open_files(EncodeInfo *encInfo)
 {
     // Src Image file
-    encInfo->fptr_src_image = fopen(encInfo->src_image_fname, "r");
+    encInfo->fptr_src_image = fopen(encInfo->src_image_fname, "rb");
     // Do Error handling
     if (encInfo->fptr_src_image == NULL)
     {
@@ -147,7 +147,7 @@ Status open_files(EncodeInfo *encInfo)
     }
 
     // Secret file
-    encInfo->fptr_secret = fopen(encInfo->secret_fname, "r");
+    encInfo->fptr_secret = fopen(encInfo->secret_fname, "rb");
     // Do Error handling
     if (encInfo->fptr_secret == NULL)
     {
@@ -158,7 +158,7 @@ Status open_files(EncodeInfo *encInfo)
     }
 
     // Stego Image file
-    encInfo->fptr_stego_image = fopen(encInfo->stego_image_fname, "w");
+    encInfo->fptr_stego_image = fopen(encInfo->stego_image_fname, "wb");
     // Do Error handling
     if (encInfo->fptr_stego_image == NULL)
     {
@@ -222,10 +222,16 @@ Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
     char buffer[54];
 
     // step 2 -> read 54 bytes from source file fread()
-    fread(buffer, sizeof(char), 54, fptr_src_image);
+    if(fread(buffer, sizeof(char), 54, fptr_src_image) != 54)
+    {
+        return e_failure;
+    }
 
     // step 3 -> write 54 bytes to dest file fwrite()
-    fwrite(buffer, sizeof(char), 54, fptr_dest_image);
+    if(fwrite(buffer, sizeof(char), 54, fptr_dest_image) != 54)
+    {
+        return e_failure;
+    }
 
     return e_success;
 
