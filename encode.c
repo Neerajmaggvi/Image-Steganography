@@ -131,7 +131,7 @@ Status open_files(EncodeInfo *encInfo)
     if (encInfo->fptr_src_image == NULL)
     {
         perror("fopen");
-        fprintf(stderr, "ERROR: Unable to open file %s\n", encInfo->src_image_fname);
+        fprintf(stderr,RED "ERROR: Unable to open file %s\n" RESET, encInfo->src_image_fname);
 
         return e_failure;
     }
@@ -296,6 +296,16 @@ Status do_encoding(EncodeInfo *encInfo)
     //step 1 -> check open_files(encInfo) is returning e_success or not
             //no -> print error return e_failure
             //yes -> print success and goto next step
+    Status for_open_file = open_files(&encInfo);
+
+    if(for_open_file == e_failure)
+    {
+        fprintf(stderr, RED "FILE OPEN FAILURED\n" RESET);
+    }
+    else
+    {
+        printf(GREEN "FILE OPEN SUCCESSFULL!\n" RESET);
+    }
 
     //step 2 -> check check_capacity(encInfo) is returning e_success or not
             //no -> print error return e_failure

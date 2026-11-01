@@ -25,7 +25,8 @@ int main(int argc, char *argv[]) // .aout -e <source_file> <secret_data_file> <o
             return 0;
         }
     }
-            // check read_and_validate_encode_args(argv, &encInfo) is returning e_success or e_failure
+    
+    // check read_and_validate_encode_args(argv, &encInfo) is returning e_success or e_failure
                 // failure -> print error msg and stop
                 // success -> print success msg 
                             // check do_encoding(&encInfo) is returning e_success or e_failure
