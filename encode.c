@@ -216,14 +216,20 @@ Status check_capacity(EncodeInfo *encInfo)
 Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
 {
     // step 1 -> rewind source file pointer
+    rewind(fptr_src_image);
     // declare one character buffer of size 54
+    char buffer[54];
 
     // step 2 -> read 54 bytes from source file fread()
+    fread(buffer, sizeof(char), 54, fptr_src_image);
 
     // step 3 -> write 54 bytes to dest file fwrite()
+    fwrite(buffer, sizeof(char), 54, fptr_dest_image);
 
-    // return e_success
+    return e_success;
+
 }
+
 Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
 {
     // char buffer[8];
@@ -358,13 +364,30 @@ Status do_encoding(EncodeInfo *encInfo)
     else
     {
         printf(GREEN "    STATUS: SUFFICIENT CAPACITY.\n" RESET);
-        return e_success;
     }
 
 
     //step 3 -> call copy_bmp_header(encInfo -> fptr_src_image, encInfo -> fptr_stego_image)is returning e_success or not
             //no -> print error return e_failure
             //yes -> print success and goto next step
+    printf("\n[3] COPY HEADER CHECK\n");
+
+    Status for_checking_header_copy = copy_bmp_header(encInfo -> fptr_src_image, encInfo -> fptr_stego_image);
+
+    if(for_checking_header_copy == e_failure)
+    {
+        return e_failure;
+    }
+    else
+    {
+        printf(GREEN "    STATUS: HEADER COPIED SUCCESSFULLY.\n" RESET);  
+    }
+
+
+
+
+
+
 
     //step 4 -> call encode_magic_string(MAGIC_STRING, encInfo)
 
