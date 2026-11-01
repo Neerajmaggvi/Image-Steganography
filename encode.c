@@ -217,6 +217,7 @@ Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
 {
     // step 1 -> rewind source file pointer
     rewind(fptr_src_image);
+
     // declare one character buffer of size 54
     char buffer[54];
 
@@ -232,16 +233,31 @@ Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
 
 Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
 {
-    // char buffer[8];
+    int magic_str_len = strlen(magic_string);
 
-    //step 1 -> read 8 bytes from source file
+    for(int i = 0; i < magic_str_len; i++)
+    {
+        char buffer[8];
 
-    //step 2 -> call encode_byte_to_lsb(magic_string[i], buffer)
+        //step 1 -> read 8 bytes from source file
+        if(fread(buffer, sizeof(char), 8, encInfo -> fptr_src_image) != 8)
+        {
+            return e_failure;
+        }
 
-    //step 3 -> write the buffer into dest file
+        //step 2 -> call encode_byte_to_lsb(magic_string[i], buffer)
+        encode_byte_to_lsb(magic_string[i], buffer);
 
-    // repeat this for strlen(magic_string) times from step 1
+        //step 3 -> write the buffer into dest file
+        if(fwrite(buffer, sizeof(char), 8, encInfo -> fptr_stego_image) != 8)
+        {
+            return e_failure;
+        }
+    }
+
+    return e_success;
 }
+
 Status encode_secret_file_extn_size(int size, EncodeInfo *encInfo)
 {
     // char buffer[32];
@@ -322,6 +338,16 @@ Status encode_byte_to_lsb(char data, char *image_buffer)
 
     // Shift data right
 
+    int j = 0;
+
+    for(int i = 7; i >= 0; i--)
+    {
+        uint get = (data & (1 << i)) >> i;
+        image_buffer[j] = image_buffer[j] & (~1);
+        image_buffer[j] = image_buffer[j] | get;
+
+        j++;
+    }
 
 }
 
