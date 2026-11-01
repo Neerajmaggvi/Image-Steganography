@@ -20,11 +20,11 @@ uint get_image_size_for_bmp(FILE *fptr_image)
 
     // Read the width (an int)
     fread(&width, sizeof(int), 1, fptr_image);
-    printf("width = %u\n", width);
+    printf("    IMAGE WIDTH  : %u\n", width);
 
     // Read the height (an int)
     fread(&height, sizeof(int), 1, fptr_image);
-    printf("height = %u\n", height);
+    printf("    IMAGE HEIGHT : %u\n", height);
 
     // Return image capacity
     return width * height * 3;
@@ -326,33 +326,38 @@ Status encode_size_to_lsb(int size, char *imageBuffer)
 
 Status do_encoding(EncodeInfo *encInfo)
 {
+    printf("\n========================================\n");
+    printf(BLUE "          IMAGE STEGANOGRAPHY\n" RESET);
+    printf( "========================================\n");
+
+
     //step 1 -> check open_files(encInfo) is returning e_success or not
     Status for_open_file = open_files(encInfo);
 
-    printf("\tFILE STATUS\t");
+    printf("\n[1] FILE OPENING STATUS\n");
     if(for_open_file == e_failure)
     {
-        fprintf(stderr, RED "FILE OPEN FAILED\n" RESET);
+        fprintf(stderr, RED "    ERROR: FILE OPEN FAILED.\n" RESET);
         return e_failure;
     }
     else
     {
-        printf(GREEN "FILES OPENED SUCCESSFULLY!\n" RESET);
+        printf(GREEN "    SUCCESS: ALL FILES OPENED.\n" RESET);
     }
 
     //step 2 -> check check_capacity(encInfo) is returning e_success or not
-    printf("\t FILE CAPACITY STATUS\t");
+    printf("\n[2] IMAGE CAPACITY CHECK\n");
 
     Status for_checking_capacity = check_capacity(encInfo);
 
     if(for_checking_capacity == e_failure)
     {
-        fprintf(stderr, RED "ERROR: INSUFFICIENT IMAGE CAPACITY TO ENCODE THE SECRET FILE.\n" RESET);
+        fprintf(stderr, RED "    ERROR: INSUFFICIENT IMAGE CAPACITY.\n" RESET);
         return e_failure;
     }
     else
     {
-        printf(GREEN "INFO: IMAGE HAS SUFFICIENT CAPACITY TO ENCODE THE SECRET FILE.\n" RESET);
+        printf(GREEN "    STATUS: SUFFICIENT CAPACITY.\n" RESET);
         return e_success;
     }
 
