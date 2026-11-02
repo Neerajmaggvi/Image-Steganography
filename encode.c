@@ -339,7 +339,7 @@ Status copy_remaining_img_data(FILE *fptr_src, FILE *fptr_dest)
     return e_failure;
 }
 
-Status encode_byte_to_lsb(unsigned char data, char *image_buffer)
+Status encode_byte_to_lsb(char data, char *image_buffer)
 {
     int j = 0;
 
@@ -424,11 +424,8 @@ Status do_encoding(EncodeInfo *encInfo)
 
     printf(GREEN "    STATUS: MAGIC STRING ENCODED SUCCESSFULLY.\n" RESET);
 
-
-
-    
-
     //step 5 -> call encode_secret_file_extn_size(strlen(encInfo -> extn_secret_file), encInfo)
+
 
     //step 6 -> call encode_secret_file_extn(encInfo -> extn_secret_file, encInfo)
 
