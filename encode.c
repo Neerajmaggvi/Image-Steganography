@@ -425,6 +425,7 @@ Status do_encoding(EncodeInfo *encInfo)
     printf(GREEN "    STATUS: MAGIC STRING ENCODED SUCCESSFULLY.\n" RESET);
 
     //step 5 -> call encode_secret_file_extn_size(strlen(encInfo -> extn_secret_file), encInfo)
+    printf("\n[5] ENCODING SECRET FILE EXTN SIZE\n");
 
 
     //step 6 -> call encode_secret_file_extn(encInfo -> extn_secret_file, encInfo)
