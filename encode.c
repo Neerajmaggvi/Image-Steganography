@@ -534,10 +534,18 @@ Status do_encoding(EncodeInfo *encInfo)
     printf(GREEN "    STATUS: SECRET FILE DATA ENCODED SUCCESSFULLY.\n" RESET);
 
     //step 9 -> copy_remaining_img_data(encInfo -> fptr_src_image, encInfo -> fptr_stego_image)is returning e_success or not
-            //no -> print error return e_failure
-            //yes -> print success
+    printf("\n[9] COPYING THE REMAINING DATA\n");
 
+    Status check_final_copy = copy_remaining_img_data(encInfo -> fptr_src_image, encInfo -> fptr_stego_image);
 
-    // return e_success
+    if(check_final_copy == e_failure)
+    {
+        fprintf(stderr, RED "    ERROR:  COPYING THE REMAINING DATA FAILED.\n" RESET);
+        return e_failure;
+    }
+
+    printf(GREEN "    STATUS: COPYING REMAINING DATA FROM SOURCE FILE COMPLETED!.\n" RESET);
+
+    return e_success;
 
 }
