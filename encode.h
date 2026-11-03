@@ -65,7 +65,7 @@ Status encode_secret_file_extn_size(int size, EncodeInfo *encInfo);
 Status encode_secret_file_extn(const char *file_extn, EncodeInfo *encInfo);
 
 /* Encode secret file size */
-Status encode_secret_file_size(long file_size, EncodeInfo *encInfo);
+Status encode_secret_file_size(int file_size, EncodeInfo *encInfo);
 
 /* Encode secret file data*/
 Status encode_secret_file_data(EncodeInfo *encInfo);

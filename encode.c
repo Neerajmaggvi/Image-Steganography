@@ -296,26 +296,49 @@ Status encode_secret_file_extn_size(int size, EncodeInfo *encInfo)
 
 Status encode_secret_file_extn(const char *file_extn, EncodeInfo *encInfo)
 {
-    // char buffer[8];
+    char buffer[8];
 
-    //step 1 -> read 8 bytes from source file
+    for(int i = 0; i < strlen(file_extn); i++)
+    {
+        //step 1 -> read 8 bytes from source file
+        if(fread(buffer, sizeof(char), 8, encInfo -> fptr_src_image) != 8)
+        {
+            return e_failure;
+        }
 
-    //step 2 -> call encode_byte_to_lsb(file_extn[i], buffer)
+        //step 2 -> call encode_byte_to_lsb(file_extn[i], buffer)
+        encode_byte_to_lsb(file_extn[i], buffer);
 
-    //step 3 -> write the buffer into dest file
+        //step 3 -> write the buffer into dest file
+        if(fwrite(buffer, sizeof(char), 8, encInfo -> fptr_stego_image) != 8)
+        {
+            return e_failure;
+        }
+    }
 
-    // repeat this for strlen(file_extn) times from step 1   
+    return e_success;  
 }
 
-Status encode_secret_file_size(long file_size, EncodeInfo *encInfo)
+Status encode_secret_file_size(int file_size, EncodeInfo *encInfo)
 {
-    // char buffer[32];
+    char buffer[32];
 
     //step 1 -> read 32 bytes from source file
+    if(fread(buffer, sizeof(char), 32, encInfo -> fptr_src_image) != 32)
+    {
+        return e_failure;
+    }
 
     //step 2 -> call encode_size_to_lsb(file_size, buffer)
+    encode_size_to_lsb(file_size, buffer);
 
     //step 3 -> write the buffer into dest file
+    if(fwrite(buffer, sizeof(char), 32, encInfo -> fptr_stego_image) != 32)
+    {
+        return e_failure;
+    }
+
+    return e_success;
 }
 
 Status encode_secret_file_data(EncodeInfo *encInfo)
@@ -449,15 +472,38 @@ Status do_encoding(EncodeInfo *encInfo)
 
     if(check_extn_size_encode == e_failure)
     {
+        fprintf(stderr, RED "    ERROR: FILE EXTENSION SIZE ENCODING FAILED.\n" RESET);
+        return e_failure;
+    }
+
+    printf(GREEN "    STATUS: FILE EXTENSION SIZE ENCODED SUCCESSFULLY.\n" RESET);
+
+    //step 6 -> call encode_secret_file_extn(encInfo -> extn_secret_file, encInfo)
+    printf("\n[6] ENCODING SECRET FILE EXTENSION\n");
+
+    Status check_extn_encode = encode_secret_file_extn(encInfo -> extn_secret_file, encInfo);
+
+    if(check_extn_encode == e_failure)
+    {
         fprintf(stderr, RED "    ERROR: FILE EXTENSION ENCODING FAILED.\n" RESET);
         return e_failure;
     }
 
     printf(GREEN "    STATUS: FILE EXTENSION ENCODED SUCCESSFULLY.\n" RESET);
 
-    //step 6 -> call encode_secret_file_extn(encInfo -> extn_secret_file, encInfo)
 
     //step 7 -> call encode_secret_file_size(encInfo ->  size_secret_file, encInfo)
+    printf("\n[7] ENCODING SECRET FILE SIZE\n");
+
+    Status check_file_size_encode = encode_secret_file_size(encInfo ->  size_secret_file, encInfo);
+
+    if(check_file_size_encode == e_failure)
+    {
+        fprintf(stderr, RED "    ERROR: SECRET FILE SIZE ENCODING FAILED.\n" RESET);
+        return e_failure;
+    }
+
+    printf(GREEN "    STATUS: SECRET FILE SIZE ENCODED SUCCESSFULLY.\n" RESET);
 
     //step 8 -> call encode_secret_file_data(encInfo)
 
