@@ -30,7 +30,7 @@ uint get_image_size_for_bmp(FILE *fptr_image)
     return width * height * 3;
 }
 
-uint get_file_size(FILE *fptr)
+long get_file_size(FILE *fptr)
 {
     // Find the size of secret file data
 
@@ -344,18 +344,33 @@ Status encode_secret_file_size(int file_size, EncodeInfo *encInfo)
 Status encode_secret_file_data(EncodeInfo *encInfo)
 {
     // Move pointer to beginning of secret file
+    rewind(encInfo -> fptr_secret);
 
     //step 1 -> read secret data from file and store it into encInfo -> secret_data
+    fread(encInfo -> secret_data, sizeof(char), encInfo -> size_secret_file, encInfo -> fptr_secret);
 
-    // char buffer[8];
+    char buffer[8];
 
-    //step 2 -> read 8 bytes from source file
+    for(int i = 0; i < encInfo -> size_secret_file; i++)
+    {
+        //step 2 -> read 8 bytes from source file
+        if(fread(buffer, sizeof(char), 8, encInfo -> fptr_src_image) != 8)
+        {
+            return e_failure;
+        }
 
-    //step 3 -> call encode_byte_to_lsb(encInfo -> secret_data[i], buffer)
+        //step 3 -> call encode_byte_to_lsb(encInfo -> secret_data[i], buffer)
+        encode_byte_to_lsb(encInfo -> secret_data[i], buffer);
 
-    //step 4 -> write the buffer into dest file
+        //step 4 -> write the buffer into dest file
+        if(fwrite(buffer, sizeof(char), 8, encInfo -> fptr_stego_image) != 8)
+        {
+            return e_failure;
+        }
 
-    // repeat this for size_secret_file times from step 2
+    }
+
+    return e_success;
 }
 
 Status copy_remaining_img_data(FILE *fptr_src, FILE *fptr_dest)
@@ -506,6 +521,17 @@ Status do_encoding(EncodeInfo *encInfo)
     printf(GREEN "    STATUS: SECRET FILE SIZE ENCODED SUCCESSFULLY.\n" RESET);
 
     //step 8 -> call encode_secret_file_data(encInfo)
+    printf("\n[8] ENCODING SECRET FILE DATA\n");
+
+    Status check_encode_secret_file = encode_secret_file_data(encInfo);
+
+    if(check_encode_secret_file ==  e_failure)
+    {
+        fprintf(stderr, RED "    ERROR: SECRET FILE DATA ENCODING FAILED.\n" RESET);
+        return e_failure;   
+    }
+
+    printf(GREEN "    STATUS: SECRET FILE DATA ENCODED SUCCESSFULLY.\n" RESET);
 
     //step 9 -> copy_remaining_img_data(encInfo -> fptr_src_image, encInfo -> fptr_stego_image)is returning e_success or not
             //no -> print error return e_failure

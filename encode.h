@@ -50,7 +50,7 @@ Status check_capacity(EncodeInfo *encInfo);
 uint get_image_size_for_bmp(FILE *fptr_image);
 
 /* Get file size */
-uint get_file_size(FILE *fptr);
+long get_file_size(FILE *fptr);
 
 /* Copy bmp image header */
 Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image);
