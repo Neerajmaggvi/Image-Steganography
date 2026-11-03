@@ -86,6 +86,7 @@ Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo)
         if(strcmp(check_extn, ".txt") == 0)
         {
             encInfo -> secret_fname = argv[3];
+            strcpy(encInfo->extn_secret_file, check_extn);
         }
         else
         {
@@ -273,13 +274,24 @@ Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
 
 Status encode_secret_file_extn_size(int size, EncodeInfo *encInfo)
 {
-    // char buffer[32];
+    char buffer[32];
 
     //step 1 -> read 32 bytes from source file
+    if(fread(buffer, sizeof(char), 32, encInfo -> fptr_src_image) != 32)
+    {
+        return e_failure;
+    }
 
     //step 2 -> call encode_size_to_lsb(size, buffer)
+    encode_size_to_lsb(size, buffer);
 
     //step 3 -> write the buffer into dest file
+    if(fwrite(buffer, sizeof(char), 32, encInfo -> fptr_stego_image) != 32)
+    {
+        return e_failure;
+    }
+
+    return e_success;
 }
 
 Status encode_secret_file_extn(const char *file_extn, EncodeInfo *encInfo)
@@ -358,6 +370,12 @@ Status encode_byte_to_lsb(char data, char *image_buffer)
 Status encode_size_to_lsb(int size, char *imageBuffer)
 {
     // write logic to encode the int
+    encode_byte_to_lsb((size >> 24) & 0xFF, imageBuffer);
+    encode_byte_to_lsb((size >> 16) & 0xFF, imageBuffer + 8);
+    encode_byte_to_lsb((size >> 8) & 0xFF, imageBuffer + 16);
+    encode_byte_to_lsb((size) & 0xFF, imageBuffer + 24);
+
+    return e_success;
 }
 
 Status do_encoding(EncodeInfo *encInfo)
@@ -426,6 +444,8 @@ Status do_encoding(EncodeInfo *encInfo)
 
     //step 5 -> call encode_secret_file_extn_size(strlen(encInfo -> extn_secret_file), encInfo)
     printf("\n[5] ENCODING SECRET FILE EXTN SIZE\n");
+
+    Status check_extn_size_encode = encode_secret_file_extn_size(strlen(encInfo -> extn_secret_file), encInfo);
 
 
     //step 6 -> call encode_secret_file_extn(encInfo -> extn_secret_file, encInfo)
