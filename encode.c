@@ -447,6 +447,13 @@ Status do_encoding(EncodeInfo *encInfo)
 
     Status check_extn_size_encode = encode_secret_file_extn_size(strlen(encInfo -> extn_secret_file), encInfo);
 
+    if(check_extn_size_encode == e_failure)
+    {
+        fprintf(stderr, RED "    ERROR: FILE EXTENSION ENCODING FAILED.\n" RESET);
+        return e_failure;
+    }
+
+    printf(GREEN "    STATUS: FILE EXTENSION ENCODED SUCCESSFULLY.\n" RESET);
 
     //step 6 -> call encode_secret_file_extn(encInfo -> extn_secret_file, encInfo)
 
