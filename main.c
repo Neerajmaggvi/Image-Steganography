@@ -47,6 +47,11 @@ int main(int argc, char *argv[])
     }
 
     return e_success;
+    
+    if(operation == e_decode)
+    {
+        
+    }
 }
 
 OperationType check_operation_type(char *symbol)
