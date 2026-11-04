@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "encode.h"
+#include "decode.h"
 #include "types.h"
 #include"color.h"
 
@@ -8,19 +9,14 @@ OperationType check_operation_type(char *);
 int main(int argc, char *argv[])
 {
     EncodeInfo encInfo;
-
-    //Check the number of arguments 
-    if(argc < 4 || argc > 5)
-    {
-        fprintf(stderr, RED "ERROR: INVALID NUMBER OF ARGUMENTS.\n" RESET);
-        return e_failure;
-    }
+    DecodeInfo decInfo;
 
     // Check the operation the user wants to perform
     OperationType operation = check_operation_type(argv[1]);
 
     if(operation == e_encode)
     {
+
         // Check the command line arguments are correct or not
         Status valid_CLA = read_and_validate_encode_args(argv, &encInfo);
 
@@ -40,17 +36,17 @@ int main(int argc, char *argv[])
             return e_failure;
         }
     }
-    else
-    {
-        fprintf(stderr, RED "ERROR: INVALID OPERATION TYPE.\n" RESET);
-        return e_failure;
-    }
+    // else
+    // {
+    //     fprintf(stderr, RED "ERROR: INVALID OPERATION TYPE.\n" RESET);
+    //     return e_failure;
+    // }
 
     return e_success;
     
     if(operation == e_decode)
     {
-        
+
     }
 }
 

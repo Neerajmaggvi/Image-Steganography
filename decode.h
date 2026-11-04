@@ -3,6 +3,8 @@
 
 #include<stdio.h>
 
+#include "types.h"
+
 typedef struct _DecodeInfo
 {
     /* Stego Image Information */
@@ -24,7 +26,7 @@ typedef struct _DecodeInfo
 /* Decoding function prototypes */
 
 /* Read and validate Decode args from argv */
-Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo);
+Status read_and_validate_decode_args(int argc, char *argv[], DecodeInfo *decInfo);
 
 /* Perform the decoding */
 Status do_decoding(DecodeInfo *decInfo);
