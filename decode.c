@@ -4,142 +4,62 @@
 #include "common.h"
 #include "color.h"
 
-Status read_and_validate_decode_args()
+/* Read and validate Decode args from argv */
+Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
 
 }
 
-Status open_files()
+/* Get file pointers for input and output files */
+Status open_decode_files(DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
-
-
 
 }
 
-Status decode_magic_string()
+/* Decode Magic String */
+Status decode_magic_string(DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
-
 
 }
 
-Status decode_secret_file_extn_size()
+/* Decode secret file extension size */
+Status decode_secret_file_extn_size(DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
-
 
 }
 
-Status decode_secret_file_extn()
+/* Decode secret file extension */
+Status decode_secret_file_extn(DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
-
-
 
 }
 
-Status decode_secret_file_size()
+/* Decode secret file size */
+Status decode_secret_file_size(DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
-
 
 }
 
-Status decode_secret_file_data()
+/* Decode secret file data */
+Status decode_secret_file_data(DecodeInfo *decInfo)
 {
-
-
-
-
-
-
-
-
-
-
 
 }
 
-Status decode_byte_from_lsb()
+/* Decode a byte from LSB of image data array */
+Status decode_byte_from_lsb(char *image_buffer, char *data)
 {
-
-
-
-
-
-
 
 }
 
-Status decode_size_from_lsb()
+/* Decode a size from LSB of image data array */
+Status decode_size_from_lsb(char *image_buffer, int *size)
 {
-
-
-
-
-
-
-
-
 
 }
 
-Status do_decoding()
+/* Perform the decoding */
+Status do_decoding(DecodeInfo *decInfo)
 {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 }
