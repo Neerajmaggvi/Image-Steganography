@@ -6,4 +6,4 @@ stego.exe : $(OBJ)
 	gcc -o $@ $^
 	
 clean: 
-	rm *.exe *.o
+	rm -f *.exe *.o

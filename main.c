@@ -35,19 +35,34 @@ int main(int argc, char *argv[])
         {
             return e_failure;
         }
-    }
-    // else
-    // {
-    //     fprintf(stderr, RED "ERROR: INVALID OPERATION TYPE.\n" RESET);
-    //     return e_failure;
-    // }
 
-    return e_success;
+        return e_success;
+    }
+
     
     if(operation == e_decode)
     {
+        Status valid_CLA = read_and_validate_decode_args(argc, argv, &decInfo);
+
+        if(valid_CLA == e_failure)
+        {
+            return e_failure;
+        }
+
+        printf("\n[2] COMMAND-LINE ARGUMENT VALIDATION\n");
+        printf(GREEN "    SUCCESS: ARGUMENTS VALIDATED.\n" RESET);
+
+        Status decoding_result = do_decoding(&decInfo);
+
+        if(decoding_result == e_failure)
+        {
+            return e_failure;
+        }
+
+        return e_success;
 
     }
+    
 }
 
 OperationType check_operation_type(char *symbol)

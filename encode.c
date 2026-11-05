@@ -418,9 +418,9 @@ Status encode_size_to_lsb(int size, char *imageBuffer)
 
 Status do_encoding(EncodeInfo *encInfo)
 {
-    printf("\n========================================\n");
-    printf(BLUE "          IMAGE STEGANOGRAPHY\n" RESET);
-    printf( "========================================\n");
+    printf("\n==========================================================\n");
+    printf("             IMAGE STEGANOGRAPHY - ENCODING\n");
+    printf("==========================================================\n\n");
 
 
     //step 1 -> check open_files(encInfo) is returning e_success or not
