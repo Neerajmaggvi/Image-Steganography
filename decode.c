@@ -160,7 +160,22 @@ Status decode_secret_file_size(DecodeInfo *decInfo)
 // Decode secret file data 
 Status decode_secret_file_data(DecodeInfo *decInfo)
 {
+    char buffer[8];
+    char data;
 
+    for(int i = 0; i < decInfo -> size_secret_file; i++)
+    {
+        if(fread(buffer, sizeof(char), 8, decInfo -> fptr_stego_image) != 8)
+        {
+            return e_failure;
+        }
+
+        decode_byte_from_lsb(buffer, &data);
+
+        fwrite(&data, sizeof(char), 1, decInfo -> fptr_output);
+    }
+    
+    return e_success;
 }
 
 // Decode a byte from LSB of image data array 
@@ -193,6 +208,18 @@ Status decode_size_from_lsb(char *image_buffer, int *size)
     return e_success;
 }
 
+Status open_output_file(DecodeInfo *decInfo)
+{
+    decInfo->fptr_output = fopen(decInfo->output_fname, "wb");
+
+    if(decInfo->fptr_output == NULL)
+    {
+        perror("fopen");
+        return e_failure;
+    }
+
+    return e_success;
+}
 // Perform the decoding 
 Status do_decoding(DecodeInfo *decInfo)
 {
@@ -266,12 +293,43 @@ Status do_decoding(DecodeInfo *decInfo)
     printf(GREEN "    SUCCESS: SECRET FILE SIZE DECODING SUCCESSFULL.\n" RESET);
 
     // Step 6: Construct the output filename
+    char output_filename[100];
+
+    strcpy(output_filename, decInfo->output_fname);
+    strcat(output_filename, decInfo->extn_secret_file);
+
+    decInfo->output_fname = output_filename;
 
     // Step 7: Open the output file
+    printf("\n[6] SECRET FILE OPENING STATUS\n");
+
+    Status check_secret_file = open_output_file(decInfo);
+
+    if(check_secret_file == e_failure)
+    {
+        fprintf(stderr, RED "    ERROR: FAILED TO OPEN SECRET FILE.\n" RESET);
+        return e_failure;   
+    }
+
+    printf(GREEN "    SUCCESS: SUCCESSFULLY OPENED THE SECRET FILE WITH EXTENSION.\n" RESET);    
 
     // Step 8: Decode the secret file data
+    printf("\n[7] SECRET DATA DECODING STATUS\n");
+
+    Status check_secret_data = decode_secret_file_data(decInfo);
+
+    if(check_secret_data == e_failure)
+    {
+        fprintf(stderr, RED "    ERROR: SECRET DATA EXTRACTION FAILED.\n" RESET);
+        return e_failure;      
+    }
+
+    printf(GREEN "    SUCCESS: SECRET DATA EXTRACTION SUCCESSFULL.\n" RESET);  
 
     // Step 9: Close the opened files
+    fclose(decInfo->fptr_stego_image);
+    fclose(decInfo->fptr_output);
 
+    
     return e_success;
 }

@@ -55,4 +55,7 @@ Status decode_byte_from_lsb(char *image_buffer, char *data);
 // Decode a size from LSB of image data array 
 Status decode_size_from_lsb(char *image_buffer, int *size);
 
+// To open the secret file after combining the extn
+Status open_output_file(DecodeInfo *decInfo);
+
 #endif
