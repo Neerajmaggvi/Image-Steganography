@@ -73,23 +73,12 @@ The following steps are performed:
 
 ## Compilation
 
-Clone the repository:
+Make sure you are inside the project directory.
 
-```bash
-git clone https://github.com/Neerajmaggvi/Image-Steganography.git
-```
-
-Navigate to the project directory:
-
-```bash
-cd Image-Steganography
-```
-
-Compile the project:
+Compile the project using:
 
 ```bash
 make
-```
 
 ## Execution
 
